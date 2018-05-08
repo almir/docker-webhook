@@ -21,7 +21,8 @@ check_and_update() {
 
   # Compare releases and update Dockerfile in case they differ
   if [[ "${LOCAL_RELEASE}" != "${LATEST_RELEASE}" ]] && [[ -n ${LATEST_RELEASE} ]]; then
-    sed -i "s/WEBHOOK_VERSION ${LOCAL_RELEASE}/WEBHOOK_VERSION ${LATEST_RELEASE}/g" ${SCRIPTPATH}/../Dockerfile
+    sed -i "s/WEBHOOK_VERSION.*/WEBHOOK_VERSION ${LATEST_RELEASE}/g" ${SCRIPTPATH}/../Dockerfile
+    sed -i "s/WEBHOOK_VERSION.*/WEBHOOK_VERSION: \"${LATEST_RELEASE}\"/g" ${SCRIPTPATH}/../.circleci/config.yml
     git commit -am "- bump webhook version to ${LATEST_RELEASE}"
     git push origin ${CURBRANCH} && \
     curl -s -X POST -H "Content-Type: application/json" \

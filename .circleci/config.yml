@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    environment:
+      - IMAGE: "webhook"
+      - WEBHOOK_VERSION: "2.6.8"
+    steps:
+      - checkout
+      - run:
+          name: Log in to docker hub
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Build image from Dockerfile
+          command: docker build -t $DOCKER_USER/$IMAGE:$WEBHOOK_VERSION .
+      - run:
+          name: Push image to docker hub
+          command: docker push $DOCKER_USER/$IMAGE:$WEBHOOK_VERSION

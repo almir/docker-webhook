@@ -40,7 +40,7 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Docker meta
         id: meta_webhook_docker
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
             almir/webhook

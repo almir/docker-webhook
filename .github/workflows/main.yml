@@ -37,6 +37,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Parse latest webhook version
+        id: webhook_info
+        run: |
+          echo "WEBHOOK_VERSION=$(git ls-remote --tags https://github.com/adnanh/webhook.git | sed 's;.*/;;g' | sort -rV | head -n 1)" >> $GITHUB_OUTPUT
+
       # https://github.com/docker/metadata-action
       - name: Docker meta
         id: meta_webhook_docker
@@ -57,3 +62,5 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta_webhook_docker.outputs.tags }}
           labels: ${{ steps.meta_webhook_docker.outputs.labels }}
+          build-args: |
+            WEBHOOK_VERSION=${{ steps.webhook_info.outputs.WEBHOOK_VERSION }}

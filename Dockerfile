@@ -10,12 +10,8 @@ RUN         go mod download
 RUN         CGO_ENABLED=0 go build -ldflags="-s -w" -o /usr/local/bin/webhook
 
 FROM        alpine:latest
-RUN         apk --no-cache add ca-certificates tzdata && \
-            addgroup -g 1000 webhook && \
-            adduser -D -s /bin/sh -u 1000 -G webhook webhook
+RUN         apk --no-cache add ca-certificates tzdata curl bash
 COPY        --from=build /usr/local/bin/webhook /usr/local/bin/webhook
-WORKDIR     /etc/webhook
 VOLUME      ["/etc/webhook"]
 EXPOSE      9000
-USER        webhook
 ENTRYPOINT  ["/usr/local/bin/webhook"]
